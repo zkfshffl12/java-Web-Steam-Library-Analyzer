@@ -1,0 +1,214 @@
+# Steam Game Analyzer Application Configuration
+
+# Spring Boot 기본 설정
+spring:
+  application:
+    name: steam-game-analyzer
+  
+  # 프로파일 설정 (개발/운영 환경 분리)
+  profiles:
+    active: dev
+  
+  # 데이터베이스 설정 (H2 인메모리 DB)
+  datasource:
+    url: jdbc:h2:mem:steamdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+  
+  # JPA/Hibernate 설정
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop  # 개발용 (운영에서는 validate 사용)
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+  
+  # H2 콘솔 설정 (개발용)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+  
+  # Jackson JSON 설정
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+    property-naming-strategy: SNAKE_CASE
+  
+  # 캐시 설정 (Redis 사용 시)
+  cache:
+    type: simple  # 개발용 (운영에서는 redis 사용)
+  
+  # 웹 설정
+  web:
+    resources:
+      add-mappings: true
+
+# 서버 설정
+server:
+  port: 9000
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Steam API 설정
+steam:
+  api:
+    key: ${STEAM_API_KEY:B6D4445C5C3240472CDD7CCBED2A63BF}  # 환경변수 또는 기본값
+    base-url: https://api.steampowered.com
+    timeout:
+      connect: 5000  # 연결 타임아웃 (ms)
+      read: 10000    # 읽기 타임아웃 (ms)
+    retry:
+      max-attempts: 3
+      delay: 1000
+    endpoints:
+      owned-games: /IPlayerService/GetOwnedGames/v0001/
+      player-summaries: /ISteamUser/GetPlayerSummaries/v0002/
+      user-stats: /ISteamUserStats/GetUserStatsForGame/v0002/
+      app-details: /ISteamUserStats/GetSchemaForGame/v2/
+      player-achievements: /ISteamUserStats/GetPlayerAchievements/v0001/
+    rate-limit:
+      requests-per-second: 10
+      burst-capacity: 20
+
+# 애플리케이션 커스텀 설정
+app:
+  analysis:
+    cache-duration: 3600  # 분석 결과 캐시 시간 (초)
+    max-games-per-request: 1000
+    async-processing: true
+  security:
+    cors:
+      allowed-origins: 
+        - http://localhost:3000
+        - http://localhost:8080
+        - http://localhost:3001
+      allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+      allowed-headers: "*"
+      allow-credentials: true
+      max-age: 3600
+
+# 로깅 설정
+logging:
+  level:
+    root: INFO
+    com.example.demo.backend.analyzer: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.cache: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/steam-analyzer.log
+    max-size: 10MB
+    max-history: 30
+
+# 액추에이터 설정 (모니터링)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env,configprops
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+  info:
+    env:
+      enabled: true
+
+# 애플리케이션 정보
+info:
+  app:
+    name: Steam Game Analyzer
+    description: Steam 게임 라이브러리 분석 및 통계 제공 서비스
+    version: 1.0.0
+    developer: Your Name
+  build:
+    artifact: steam-analyzer
+    group: com.example.demo
+
+---
+# 개발 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  # 개발용 데이터베이스 설정
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+# 개발용 로깅
+logging:
+  level:
+    com.example.demo.backend.analyzer: DEBUG
+    org.springframework.web: DEBUG
+
+---
+# 운영 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  # 운영용 데이터베이스 설정
+  datasource:
+    url: ${DATABASE_URL:jdbc:h2:mem:steamdb}
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_PASSWORD:}
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate  # 운영에서는 스키마 변경 금지
+    show-sql: false
+
+# 운영용 로깅
+logging:
+  level:
+    root: WARN
+    com.example.demo.backend.analyzer: INFO
+  file:
+    name: /var/log/steam-analyzer/application.log
+
+# 운영용 Steam API 설정
+steam:
+  api:
+    key: ${STEAM_API_KEY}  # 반드시 환경변수로 설정
+    timeout:
+      connect: 3000
+      read: 8000

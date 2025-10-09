@@ -1,8 +1,15 @@
 package com.example.demo.backend.analyzer.dto.response;
 
+import java.util.List;
+
+import org.apache.catalina.connector.Response;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.Value;
 
 /**
@@ -26,4 +33,31 @@ public class SteamRequestDTO {
      * true: 공개 프로필, false: 비공개 프로필
      */
     boolean isPublic;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class SteamGameDto {
+        private int appid;
+        private String name;
+        private int playtim_forever;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class OwnedGamesResponse {
+        private Response response;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+         public static class Response{
+            private int game_count;
+            private List<SteamGameDto> games;
+         }
+    }
 }
