@@ -1,52 +1,100 @@
+/**
+ * Steam 게임 분석기 - 스타일시트
+ * Steam UI 디자인 테마를 기반으로 한 다크 테마
+ */
 
+/* ======================================
+   CSS 변수 정의
+   ====================================== */
+:root {
+    /* 색상 팔레트 - Steam 테마 */
+    --color-bg-primary: #1b2838;
+    --color-bg-secondary: #1a2a3a;
+    --color-bg-result: #0d121b;
+    --color-accent: #66c0f4;
+    --color-text-primary: #e5e5e5;
+    --color-text-secondary: #c7c7c7;
+    --color-text-muted: #999;
+    --color-border: #3a5775;
+    --color-button-primary: #5b92e5;
+    --color-button-hover: #79a8e9;
+    --color-success: #4CAF50;
+    --color-error: #FF6347;
+    
+    /* 간격 */
+    --spacing-sm: 10px;
+    --spacing-md: 20px;
+    --spacing-lg: 30px;
+    --spacing-xl: 40px;
+    
+    /* 기타 */
+    --border-radius: 8px;
+    --border-radius-sm: 4px;
+    --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* ======================================
+   기본 스타일
+   ====================================== */
 body {
-    background-color: #1b2838;
-    color: #e5e5e5;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     line-height: 1.6;
 }
 
+/* ======================================
+   레이아웃 및 컨테이너
+   ====================================== */
 .container {
     max-width: 980px;
     margin: 50px auto;
-    padding: 30px;
-
-    background-color: #1a2a3a;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
 }
 
+/* ======================================
+   타이포그래피
+   ====================================== */
 h1 {
-    color: #66c0f4;
-    border-bottom: 2px solid #66c0f4;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    color: var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
 }
 
-p{
-    color: #c7c7c7;
+p {
+    color: var(--color-text-secondary);
 }
 
-
+/* ======================================
+   버튼 스타일
+   ====================================== */
 #steam-login-button {
     display: inline-block;
     padding: 12px 25px;
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    /* Steam 공식 버튼 색상 */
-    background-color: #5b92e5; 
+    background-color: var(--color-button-primary);
     color: #ffffff;
     border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.3s ease, transform 0.1s ease;
     text-transform: uppercase;
 }
 
 #steam-login-button:hover {
-    background-color: #79a8e9; 
+    background-color: var(--color-button-hover);
+    transform: translateY(-2px);
+}
+
+#steam-login-button:active {
+    transform: translateY(0);
 }
 
 #analysis-result {

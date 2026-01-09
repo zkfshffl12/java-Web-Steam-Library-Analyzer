@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- 기본 메타 정보 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Steam 계정으로 로그인하여 게임 통계를 확인하세요">
+    <meta name="author" content="Steam Library Analyzer">
+    
+    <title>Steam 게임 분석기</title>
+    
+    <!-- 스타일시트 -->
+    <link rel="stylesheet" href="style.css"> 
+    
+</head>
+<body>
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <!-- 헤더 섹션 -->
+        <header>
+            <h1>🎮 Steam 게임 분석기</h1>
+            <p>설명: Steam 계정으로 로그인하여 당신의 게임 통계를 확인하세요.</p>
+            <p><small>로그인 시 Steam에서 자동으로 게임 목록을 가져옵니다.</small></p>
+        </header>
+
+        <!-- 로그인 버튼 -->
+        <button id="steam-login-button" aria-label="Steam 로그인 버튼">🔐 Steam으로 로그인</button>
+
+        <!-- 분석 결과 표시 영역 -->
+        <div id="analysis-result" role="region" aria-label="분석 결과" aria-live="polite">
+            로그인 후 자동으로 분석이 시작됩니다...
+        </div>
+    </div>
+
+    <!-- JavaScript 파일 -->
+    <script src="script.js"></script>
+
+</body>
+</html>
